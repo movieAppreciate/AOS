@@ -1,4 +1,4 @@
-package com.proj.movieappreciate.ui
+package com.proj.movieappreciate.config
 
 import android.os.Bundle
 import android.view.LayoutInflater
