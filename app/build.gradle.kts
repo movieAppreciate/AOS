@@ -75,5 +75,5 @@ dependencies {
     //framework ktx dependency 추가
     implementation ("androidx.fragment:fragment-ktx:1.4.1")
 
-    implementation ("com.kakao.sdk:v2-user:2.12.1")
+    implementation ("com.kakao.sdk:v2-all:2.16.0")
 }
