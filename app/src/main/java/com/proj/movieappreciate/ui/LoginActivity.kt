@@ -36,13 +36,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
     }
 
-    fun init () = binding.apply {
+    private fun init () = binding.apply {
         kakaoLoginBtn.setOnClickListener {
             kakaoLogin()
         }
     }
 
-    fun kakaoLogin(){
+    private fun kakaoLogin(){
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
             UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
                 if (error != null) {
@@ -96,6 +96,5 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             }
         }
     }
-
 
 }

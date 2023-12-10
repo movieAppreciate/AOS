@@ -17,3 +17,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "MovieAppreciate"
 include(":app")
+include(":data")
+include(":data:remote")
+include(":features")
+include(":features:announcement")
+include(":features:announcement:announcement-api")
+include(":features:announcement:announcement-impl")
