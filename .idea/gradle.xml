@@ -12,6 +12,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/remote" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/announcement" />
+            <option value="$PROJECT_DIR$/features/announcement/announcement-api" />
+            <option value="$PROJECT_DIR$/features/announcement/announcement-impl" />
           </set>
         </option>
       </GradleProjectSettings>
