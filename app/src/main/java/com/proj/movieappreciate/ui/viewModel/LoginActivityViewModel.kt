@@ -1,4 +1,6 @@
 package com.proj.movieappreciate.ui.viewModel
 
-class LoginActivityViewModel {
+import androidx.lifecycle.ViewModel
+
+class LoginActivityViewModel : ViewModel(){
 }
