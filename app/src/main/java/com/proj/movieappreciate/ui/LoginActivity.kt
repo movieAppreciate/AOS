@@ -5,7 +5,9 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -24,9 +26,11 @@ import com.proj.movieappreciate.R
 import com.proj.movieappreciate.config.BaseActivity
 import com.proj.movieappreciate.databinding.ActivityLoginBinding
 import com.proj.movieappreciate.ui.viewModel.LoginActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private  val TAG = "LoginActivity"
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
 
 
@@ -81,6 +85,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         naverLoginBtn.setOnClickListener {
             naverLogin()
         }
+        loginActivityViewModel.signUpResponse.observe(this@LoginActivity) {
+            Toast.makeText(this@LoginActivity, "회원가입 완료", Toast.LENGTH_LONG).show()
+            Log.d(TAG, "init: 회원가입")
+        }
+
     }
 
     private fun kakaoLogin(){
@@ -119,7 +128,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                             "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                             "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
 
-
+                user.kakaoAccount?.profile?.thumbnailImageUrl?.let {
+                    loginActivityViewModel.signUp(user.id.toString(), "kakao",
+                        it
+                    )
+                }
             }
         }
     }

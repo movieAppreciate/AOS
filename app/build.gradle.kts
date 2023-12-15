@@ -4,6 +4,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id ("kotlin-kapt")
+    id ("dagger.hilt.android.plugin")
+
 }
 
 android {
@@ -69,7 +72,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     // https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor
 //    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
-
+    implementation ("com.squareup.retrofit2:converter-scalars:2.5.0")
     // ViewModel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
     //liveData dependency 추가
@@ -87,6 +90,11 @@ dependencies {
 
     //naver
     implementation ("com.navercorp.nid:oauth-jdk8:5.1.0")
+
+
+    //HILT -DAGGER
+    implementation ("com.google.dagger:hilt-android:2.47")
+    kapt ("com.google.dagger:hilt-android-compiler:2.47")
 
 
 
