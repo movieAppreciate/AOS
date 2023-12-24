@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/announcementFragment">
+
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.proj.movieappreciate.ui.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first" >
-
+        android:id="@+id/announcementFragment"
+        android:name="com.proj.movieappreciate.ui.announcement.AnnouncementFragment"
+        android:label="fragment_announcement"
+        tools:layout="@layout/fragment_announcement" >
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_announcementFragment_to_editAnnouncementFragment"
+            app:destination="@id/editAnnouncementFragment" />
     </fragment>
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.proj.movieappreciate.ui.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second" >
-
+        android:id="@+id/editAnnouncementFragment"
+        android:name="com.proj.movieappreciate.ui.announcement.EditAnnouncementFragment"
+        android:label="fragment_edit_announcement"
+        tools:layout="@layout/fragment_edit_announcement" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_editAnnouncementFragment_to_announcementFragment"
+            app:destination="@id/announcementFragment" />
     </fragment>
 </navigation>

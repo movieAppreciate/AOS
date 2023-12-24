@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.announcement.EditAnnouncementFragment">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backBtn"
+        android:src="@drawable/baseline_arrow_back_ios_new_24"/>
+
+    <TextView
+        android:id="@+id/announcBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="공지사항"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/typeTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/announcBtn"
+        android:layout_marginTop="20dp"
+        android:text="유형을 선택해주세요"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/typeTv"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompletetv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="공지" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목을 작성하세요"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/textInputLayout"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/titleEt"
+        android:layout_width="match_parent"
+        android:layout_below="@id/titleTextView"
+        android:background="@color/gray"
+        android:textSize="25sp"
+        android:text=""
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:id="@+id/descTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="제목을 작성하세요"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/titleEt"/>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_below="@id/descTv"
+        android:background="@color/gray"
+        android:id="@+id/descEt"
+        android:text=""
+        android:layout_height="200dp">
+
+    </com.google.android.material.textfield.TextInputEditText>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/doneBtn"
+        android:layout_below="@id/descEt"
+        android:layout_marginTop="10dp"
+        android:text="완료하기"
+        android:backgroundTint="@color/black"/>
+
+</RelativeLayout>

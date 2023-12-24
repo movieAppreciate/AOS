@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.viewModels
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -15,6 +16,10 @@ import com.google.android.gms.tasks.Task
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.Constants
 import com.kakao.sdk.user.UserApiClient
+import com.proj.movieappreciate.R
+import com.proj.movieappreciate.config.BaseActivity
+import com.proj.movieappreciate.databinding.ActivityLoginBinding
+import com.proj.movieappreciate.ui.announcement.AnnouncementActivity
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
 import com.navercorp.nid.oauth.OAuthLoginCallback
@@ -49,7 +54,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         super.onCreate(savedInstanceState)
 
         // 액티비티를 세로모드로 고정
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -68,7 +73,17 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
         init()
 
+        //Move to Annoucement Page
+        binding.moveAnnouncementBtn.setOnClickListener {
+            val intent = Intent(this,AnnouncementActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+
+
+
+
 
     private fun init () = binding.apply {
         kakaoLoginBtn.setOnClickListener {
