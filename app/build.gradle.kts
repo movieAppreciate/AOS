@@ -2,6 +2,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -38,6 +39,7 @@ android {
         dataBinding = true
         viewBinding = true
     }
+
 
 }
 
@@ -76,4 +78,16 @@ dependencies {
     implementation ("androidx.fragment:fragment-ktx:1.4.1")
 
     implementation ("com.kakao.sdk:v2-all:2.16.0")
+
+    //google login
+//    implementation ("com.google.gms:google-services:4.4.0")
+//    implementation ("com.google.firebase:firebase-auth:22.3.0")
+//    implementation ("com.google.firebase:firebase-bom:32.7.0")
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+
+    //naver
+    implementation ("com.navercorp.nid:oauth-jdk8:5.1.0")
+
+
+
 }
