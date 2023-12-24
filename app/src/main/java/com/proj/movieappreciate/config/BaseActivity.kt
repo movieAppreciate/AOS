@@ -16,3 +16,6 @@ abstract class BaseActivity<B : ViewBinding>(private val inflate  : (LayoutInfla
     }
 
 }
+/**
+ * BindingActivity
+ */

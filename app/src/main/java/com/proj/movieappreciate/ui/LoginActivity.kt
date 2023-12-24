@@ -1,14 +1,18 @@
 package com.proj.movieappreciate.ui
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.user.Constants
 import com.kakao.sdk.user.UserApiClient
+import com.proj.movieappreciate.R
 import com.proj.movieappreciate.config.BaseActivity
 import com.proj.movieappreciate.databinding.ActivityLoginBinding
+import com.proj.movieappreciate.ui.announcement.AnnouncementActivity
 
 private  val TAG = "LoginActivity"
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
@@ -30,11 +34,21 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         super.onCreate(savedInstanceState)
 
         // 액티비티를 세로모드로 고정
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         init()
 
+        //Move to Annoucement Page
+        binding.moveAnnouncementBtn.setOnClickListener {
+            val intent = Intent(this,AnnouncementActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+
+
+
+
 
     private fun init () = binding.apply {
         kakaoLoginBtn.setOnClickListener {
