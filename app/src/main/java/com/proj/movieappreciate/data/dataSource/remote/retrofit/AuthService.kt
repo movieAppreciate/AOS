@@ -9,11 +9,12 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 private const val TAG = "AuthService"
 interface AuthService {
     @POST("signup")
-    suspend fun signUp(@Path("uid") uid : String, @Path("type") type : String, @Path("profileURL") profileURL : String) : Response<SignUpResponse>
+    suspend fun signUp(@Query("uid") uid : String, @Query("type") type : String, @Query("profileURL") profileURL : String) : Response<SignUpResponse>
     @POST("login")
     suspend fun login(@Body loginData: LoginData) : Response<LoginResponse>
 }

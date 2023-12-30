@@ -87,7 +87,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         }
         loginActivityViewModel.signUpResponse.observe(this@LoginActivity) {
             Toast.makeText(this@LoginActivity, "회원가입 완료", Toast.LENGTH_LONG).show()
-            Log.d(TAG, "init: 회원가입")
+            Log.d(TAG, "init: 회원가입 ${it}")
         }
 
     }
@@ -181,6 +181,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             val account = completedTask.getResult(ApiException::class.java)
             // 로그인 성공: account.getEmail(), account.getIdToken() 등을 활용할 수 있습니다.
             Log.d(TAG, "handleSignInResult: ${account.email}")
+            loginActivityViewModel.signUp(account.id.toString(), "google", account.photoUrl.toString() )
         } catch (e: ApiException) {
             // 로그인 실패
             Log.w(TAG, "signInResult:failed code=" + e.statusCode)
@@ -195,6 +196,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             override fun onSuccess(response: NidProfileResponse) {
                 val userId = response.profile?.id
                 Log.d(TAG, "네이버 로그인 성공 !!, 아이디 : $userId")
+                response.profile?.profileImage?.let {
+                    if (userId != null) {
+                        loginActivityViewModel.signUp(userId, "naver",
+                            it
+                        )
+                    }
+                }
             }
 
             override fun onFailure(httpStatus: Int, message: String) {
