@@ -11,6 +11,7 @@ import com.proj.movieappreciate.data.dataSource.remote.retrofit.AuthService
 import com.proj.movieappreciate.data.dataSource.remote.retrofit.RemoteDataSource
 import com.proj.movieappreciate.data.repository.AuthRepository
 import com.proj.movieappreciate.util.RetrofitUtil
+import com.proj.movieappreciate.util.SharedPreferencesUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +29,7 @@ import javax.inject.Singleton
 class App : Application() {
     val API_URL = "http://ec2-52-79-224-23.ap-northeast-2.compute.amazonaws.com:8080/"
     private var appContext: Context? = null
+    lateinit var sharedPreferences: SharedPreferencesUtil
     companion object {
 
 
@@ -43,7 +45,7 @@ class App : Application() {
         appContext = this
         KakaoSdk.init(this, getString(R.string.kakao_app_key))
         initRetrofitInstance()
-
+        sharedPreferences = SharedPreferencesUtil(applicationContext)
 
     }
 
