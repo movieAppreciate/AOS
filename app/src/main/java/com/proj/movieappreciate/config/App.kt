@@ -27,8 +27,7 @@ import javax.inject.Singleton
 
 @HiltAndroidApp
 class App : Application() {
-<<<<<<< HEAD
-=======
+
     val API_URL = "http://ec2-52-79-224-23.ap-northeast-2.compute.amazonaws.com:8080/"
     private var appContext: Context? = null
     lateinit var sharedPreferences: SharedPreferencesUtil
@@ -42,7 +41,6 @@ class App : Application() {
 
     }
 
->>>>>>> feature/serverCheck
     override fun onCreate() {
         super.onCreate()
         KakaoSdk.init(this, getString(R.string.kakao_app_key))
