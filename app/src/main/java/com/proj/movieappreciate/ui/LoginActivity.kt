@@ -6,7 +6,9 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -16,9 +18,7 @@ import com.google.android.gms.tasks.Task
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.Constants
 import com.kakao.sdk.user.UserApiClient
-import com.proj.movieappreciate.R
-import com.proj.movieappreciate.config.BaseActivity
-import com.proj.movieappreciate.databinding.ActivityLoginBinding
+
 import com.proj.movieappreciate.ui.announcement.AnnouncementActivity
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -29,9 +29,11 @@ import com.proj.movieappreciate.R
 import com.proj.movieappreciate.config.BaseActivity
 import com.proj.movieappreciate.databinding.ActivityLoginBinding
 import com.proj.movieappreciate.ui.viewModel.LoginActivityViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 private  val TAG = "LoginActivity"
+@AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
 
 
@@ -96,6 +98,21 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         naverLoginBtn.setOnClickListener {
             naverLogin()
         }
+        loginActivityViewModel.signUpResponse.observe(this@LoginActivity) {
+            val data = it.getOrNull()
+            if (data != null){
+                Toast.makeText(this@LoginActivity, "회원가입 완료", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "init: 회원가입 ${it}")
+            }
+        }
+        loginActivityViewModel.loginResponse.observe(this@LoginActivity) {
+            val data = it.getOrNull()
+            if (data != null){
+                Toast.makeText(this@LoginActivity, "로그인 완료", Toast.LENGTH_LONG).show()
+                Log.d(TAG, "init: 로그인 ${it}")
+            }
+        }
+
     }
 
     private fun kakaoLogin(){
@@ -134,7 +151,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                             "\n닉네임: ${user.kakaoAccount?.profile?.nickname}" +
                             "\n프로필사진: ${user.kakaoAccount?.profile?.thumbnailImageUrl}")
 
-
+                user.kakaoAccount?.profile?.thumbnailImageUrl?.let {
+                    loginActivityViewModel.login(user.id.toString(), "kakao",
+                        it
+                    )
+                }
             }
         }
     }
@@ -183,6 +204,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             val account = completedTask.getResult(ApiException::class.java)
             // 로그인 성공: account.getEmail(), account.getIdToken() 등을 활용할 수 있습니다.
             Log.d(TAG, "handleSignInResult: ${account.email}")
+            loginActivityViewModel.login(account.id.toString(), "google", account.photoUrl.toString() )
         } catch (e: ApiException) {
             // 로그인 실패
             Log.w(TAG, "signInResult:failed code=" + e.statusCode)
@@ -197,6 +219,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             override fun onSuccess(response: NidProfileResponse) {
                 val userId = response.profile?.id
                 Log.d(TAG, "네이버 로그인 성공 !!, 아이디 : $userId")
+                response.profile?.profileImage?.let {
+                    if (userId != null) {
+                        loginActivityViewModel.login(userId, "naver",
+                            it
+                        )
+                    }
+                }
             }
 
             override fun onFailure(httpStatus: Int, message: String) {
