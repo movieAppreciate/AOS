@@ -2,9 +2,12 @@ package com.proj.movieappreciate.util
 
 import com.proj.movieappreciate.config.App
 import com.proj.movieappreciate.data.dataSource.remote.retrofit.AuthService
+import com.proj.movieappreciate.data.dataSource.remote.retrofit.ReportService
 
 class RetrofitUtil {
     companion object {
         val authService : AuthService = App.retrofit.create(AuthService::class.java)
+
+        val reportService : ReportService = App.retrofit.create(ReportService::class.java)
     }
 }

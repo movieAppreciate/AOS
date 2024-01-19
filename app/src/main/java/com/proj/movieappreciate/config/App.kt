@@ -28,7 +28,7 @@ import javax.inject.Singleton
 @HiltAndroidApp
 class App : Application() {
 
-    val API_URL = "http://ec2-52-79-224-23.ap-northeast-2.compute.amazonaws.com:8080/"
+    val API_URL = "http://ec2-54-180-121-146.ap-northeast-2.compute.amazonaws.com:8080/"
     private var appContext: Context? = null
     lateinit var sharedPreferences: SharedPreferencesUtil
     companion object {
