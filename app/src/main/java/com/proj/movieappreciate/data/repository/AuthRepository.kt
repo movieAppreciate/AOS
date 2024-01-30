@@ -4,10 +4,11 @@ import android.util.Log
 import com.proj.movieappreciate.data.dataSource.model.UserDTO
 import com.proj.movieappreciate.data.dataSource.model.LoginResponse
 import com.proj.movieappreciate.data.dataSource.model.SignUpResponse
+import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSource
 import com.proj.movieappreciate.data.dataSource.remote.retrofit.RemoteDataSource
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(private val remoteDataSource: RemoteDataSource) {
+class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemoteDataSource) {
     class SignUpException : Exception("SignUp")
     suspend fun signUp(uid : String, type : String, profileURL : String): Result<SignUpResponse> {
         return try {
