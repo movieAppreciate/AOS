@@ -1,15 +1,15 @@
 package com.proj.movieappreciate.ui.announcement
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.proj.movieappreciate.R
 import com.proj.movieappreciate.databinding.FragmentEditAnnouncementBinding
 
-class EditAnnouncementFragment : Fragment() {
+class EditAnnouncementFragment : androidx.fragment.app.Fragment() {
 
     private var _binding: FragmentEditAnnouncementBinding? = null
     private val binding get() = _binding!!
@@ -37,6 +37,9 @@ class EditAnnouncementFragment : Fragment() {
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
+
+
+        //todo : 완료 버튼 클릭 시 동작  추가
     }
 
     override fun onDestroy() {

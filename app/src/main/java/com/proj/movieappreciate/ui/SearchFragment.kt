@@ -28,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class SearchFragment : androidx.fragment.app.Fragment() {
     private var _binding : FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private val viewModel : SearchFragmentViewModel by viewModels()

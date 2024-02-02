@@ -9,12 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
+
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.Constants
 import com.kakao.sdk.user.UserApiClient
@@ -31,13 +26,12 @@ import com.proj.movieappreciate.databinding.ActivityLoginBinding
 import com.proj.movieappreciate.ui.viewModel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-
 private  val TAG = "LoginActivity"
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
 
 
-    var mGoogleSignInClient: GoogleSignInClient? = null
+//    var mGoogleSignInClient: GoogleSignInClient? = null
     val loginActivityViewModel : LoginActivityViewModel by viewModels()
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -58,13 +52,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         // 액티비티를 세로모드로 고정
         //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.google_app_key))
-            .requestEmail()
-            .build()
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+//
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.google_app_key))
+//            .requestEmail()
+//            .build()
+//
+//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         /** Naver Login Module Initialize */
         val naverClientId = getString(R.string.social_login_info_naver_client_id)
@@ -91,10 +85,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         kakaoLoginBtn.setOnClickListener {
             kakaoLogin()
         }
-        googleLoginBtn.setOnClickListener {
-            googleLogin()
 
-        }
+//        googleLoginBtn.setOnClickListener {
+//            googleLogin()
+//
+//        }
+
         naverLoginBtn.setOnClickListener {
             naverLogin()
         }
@@ -112,7 +108,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 Log.d(TAG, "init: 로그인 ${it}")
             }
         }
-
     }
 
     private fun kakaoLogin(){
@@ -175,42 +170,42 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
     }
 
 
-    private fun googleLogin() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, 1001)
-    }
+//    private fun googleLogin() {
+//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//            .requestIdToken(getString(R.string.default_web_client_id))
+//            .requestEmail()
+//            .build()
+//        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+//        val signInIntent = mGoogleSignInClient.signInIntent
+//        startActivityForResult(signInIntent, 1001)
+//    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1001) {
-            try {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleSignInResult(task)
-            } catch (e: ApiException) {
-                // 로그인 실패
-                Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-
-            }
+//            try {
+////                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+////                handleSignInResult(task)
+//            } catch (e) {
+//                // 로그인 실패
+//                Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+//
+//            }
         }
     }
 
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            val account = completedTask.getResult(ApiException::class.java)
-            // 로그인 성공: account.getEmail(), account.getIdToken() 등을 활용할 수 있습니다.
-            Log.d(TAG, "handleSignInResult: ${account.email}")
-            loginActivityViewModel.login(account.id.toString(), "google", account.photoUrl.toString() )
-        } catch (e: ApiException) {
-            // 로그인 실패
-            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-
-        }
-    }
+//    private fun handleSignInResult(completedTask: Task) {
+//        try {
+//            val account = completedTask.getResult(ApiException::class.java)
+//            // 로그인 성공: account.getEmail(), account.getIdToken() 등을 활용할 수 있습니다.
+//            Log.d(TAG, "handleSignInResult: ${account.email}")
+//            loginActivityViewModel.login(account.id.toString(), "google", account.photoUrl.toString() )
+//        } catch (e: ApiException) {
+//            // 로그인 실패
+//            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+//
+//        }
+//    }
 
     private fun naverLogin() {
         var naverToken :String? = ""
@@ -239,6 +234,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 onFailure(errorCode, message)
             }
         }
+
         val oauthLoginCallback = object : OAuthLoginCallback {
             override fun onSuccess() {
                 // 네이버 로그인 인증이 성공했을 때 수행할 코드 추가
