@@ -16,7 +16,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tabBackground="#FFFFFF">
+        android:text="탭바"
+        app:tabBackground="@color/white">
+
 
         <!-- 탭 추가 -->
         <com.google.android.material.tabs.TabItem
