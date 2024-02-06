@@ -23,12 +23,11 @@ class LoginActivityViewModel @Inject constructor(private val authRepository : Au
     val loginResponse: LiveData<Result<LoginResponse>> get() = _loginResponse
     fun signUp(uid : String, type : String, profileURL : String) {
 
-
         viewModelScope.launch {
-            val data = SignUpData(uid, type, profileURL)
             try {
                 val result = authRepository.signUp(uid, type, profileURL)
                 _signUpResponse.value = result
+                Log.d("로그인 SignUp",_signUpResponse.value.toString())
             } catch (e: Exception) {
                 _signUpResponse.value = Result.failure(e)
             }
@@ -40,6 +39,8 @@ class LoginActivityViewModel @Inject constructor(private val authRepository : Au
             val data = UserDTO(uid, type)
             try{
                 val result = authRepository.login(uid, type)
+                Log.d("로그인 login viewModel", result.isSuccess.toString())
+                Log.e("로그인 viewModel", "login: ${result}" )
                 if(result.isFailure){
                     if(result.exceptionOrNull() is AuthRepository.SignUpException){
                         signUp(uid, type, profileURL)
@@ -47,13 +48,14 @@ class LoginActivityViewModel @Inject constructor(private val authRepository : Au
                 }
                 else{
                     _loginResponse.value = result
-                    Log.d("Result", "login: $result")
+                    Log.d("로그인 login 뷰 모댈 result", "login: $result")
                 }
 
             } catch (e : Exception){
-                Log.e("login ERROR", "login: ${e.message}" )
+                Log.e("로그인 ERROR", "login: ${e.message}" )
 
             }
         }
     }
+
 }

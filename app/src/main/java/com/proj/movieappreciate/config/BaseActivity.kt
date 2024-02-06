@@ -15,6 +15,7 @@ abstract class BaseActivity<B : ViewBinding>(private val inflate  : (LayoutInfla
         setContentView(binding.root)
     }
 
+
 }
 /**
  * BindingActivity

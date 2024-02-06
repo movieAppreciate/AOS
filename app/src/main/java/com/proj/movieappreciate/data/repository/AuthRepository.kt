@@ -13,6 +13,8 @@ class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemot
     suspend fun signUp(uid : String, type : String, profileURL : String): Result<SignUpResponse> {
         return try {
             val response = remoteDataSource.signUp(uid ,type, profileURL )
+
+            Log.d("로그인 signup body",response.toString())
             if (response.isSuccessful) {
                 Result.success(response.body()!!)
             } else {
@@ -26,6 +28,7 @@ class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemot
         return try {
             val response = remoteDataSource.login(uid, type)
             if (response.isSuccessful) {
+                Log.d("로그인 성공", response.headers().toString())
                 Result.success(response.body()!!)
             } else {
                 if(response.code() == 401){
@@ -33,6 +36,7 @@ class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemot
                     throw SignUpException()
                 }
                 else{
+                    Log.d("로그인 레포",response.errorBody().toString())
                     Result.failure(Exception("Login failed"))
                 }
 

@@ -18,10 +18,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -61,6 +64,7 @@ class App : Application() {
         retrofit = Retrofit.Builder()
             .baseUrl(API_URL)
             .client(client)
+            .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
@@ -71,4 +75,22 @@ class App : Application() {
 //        .setLenient()
 //        .create()
 
+}
+
+class NullOnEmptyConverterFactory : Converter.Factory() {
+    fun converterFactory() = this
+    override fun responseBodyConverter(type: Type, annotations: Array<out Annotation>, retrofit: Retrofit) = object :
+        Converter<ResponseBody, Any?> {
+        val nextResponseBodyConverter = retrofit.nextResponseBodyConverter<Any?>(converterFactory(), type, annotations)
+        override fun convert(value: ResponseBody) = if (value.contentLength() != 0L) {
+            try{
+                nextResponseBodyConverter.convert(value)
+            }catch (e:Exception){
+                e.printStackTrace()
+                null
+            }
+        } else{
+            null
+        }
+    }
 }
