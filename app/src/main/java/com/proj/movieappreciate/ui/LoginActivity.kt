@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.credentials.Credential
 import androidx.credentials.PasswordCredential
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
@@ -141,6 +143,25 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
 
     private fun init () = binding.apply {
+        btnSearch.setOnClickListener {
+            Log.d("rla124", "검색 버튼 클릭")
+
+            val fragmentManager: FragmentManager = supportFragmentManager
+            val transaction: FragmentTransaction = fragmentManager.beginTransaction()
+
+            val searchFragment = SearchFragment()
+
+            transaction.replace(R.id.fragment_container, searchFragment)
+
+            transaction.addToBackStack(null)
+
+            transaction.commit()
+        }
+
+        btnWrite.setOnClickListener {
+            Log.d("rla124", "감상문 작성 버튼 클릭")
+        }
+
         kakaoLoginBtn.setOnClickListener {
             kakaoLogin()
         }

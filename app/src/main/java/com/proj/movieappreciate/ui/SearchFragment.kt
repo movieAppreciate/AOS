@@ -29,24 +29,24 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class SearchFragment : androidx.fragment.app.Fragment() {
-    private var _binding : FragmentSearchBinding? = null
+    private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private val viewModel : SearchFragmentViewModel by viewModels()
+    private val viewModel: SearchFragmentViewModel by viewModels()
     lateinit var adapter: ReportAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentSearchBinding.inflate(layoutInflater,container,false)
+        _binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("Fragment", "onViewCreated: ")
+        Log.d("rla124", "Fragment onViewCreated")
         adapter = ReportAdapter(requireContext()).apply {
-            itemClickListener =object : ReportAdapter.ItemClickListener{
+            itemClickListener = object : ReportAdapter.ItemClickListener {
                 override fun onClick(
                     binding: MovieCommentaryItemBinding,
                     position: Int,
@@ -60,29 +60,24 @@ class SearchFragment : androidx.fragment.app.Fragment() {
         }
         init()
         viewModel.getAllReports()
-
     }
 
-    fun init() = binding.apply {
+    fun init() {
+        binding.reportRecycerView.adapter = adapter
+        binding.reportRecycerView.layoutManager = LinearLayoutManager(requireContext())
 
-       binding.reportRecycerView.apply {
-           adapter = adapter
-           layoutManager = LinearLayoutManager(requireContext())
-       }
-
-
-
-        viewModel.reportList.observe(viewLifecycleOwner){
+        viewModel.reportList.observe(viewLifecycleOwner) {
             val data = it.getOrNull()
-            if(data.isNullOrEmpty()){
+            if (data.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), "불러올 감상문이 없습니다.", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 adapter.submitList(data)
             }
         }
     }
 
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }
