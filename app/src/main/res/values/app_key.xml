@@ -3,9 +3,11 @@
 
     <string name="kakao_native_key"> kakaofa10a3152aa4c9b8000fdc2467517e1c </string>
     <string name="kakao_app_key"> fa10a3152aa4c9b8000fdc2467517e1c </string>
-    <string name="google_app_key">383576248373-tgfg7k79k8cotg9ttphp47mh1bq9f346.apps.googleusercontent.com</string>
+    <string name="google_server_client_ID">1082543767269-9ttjufuh5o81r6eckk7p5s8h6mmpp3v2.apps.googleusercontent.com</string>
 
     <string name="social_login_info_naver_client_id">atSEYxEEDLWkadN_5_R5</string>
     <string name="social_login_info_naver_client_secret">ddVxkRx5B9</string>
     <string name="social_login_info_naver_client_name">네이버아이디 로그인</string>
+
+
 </resources>

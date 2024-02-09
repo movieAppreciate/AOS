@@ -16,11 +16,11 @@ class SharedPreferencesUtil(context: Context) {
         return preferences.getLong(key, -1)
     }
 
-   fun addSignUpInfo(data : SignUpResponse){
-       val editor = preferences.edit()
-       editor.putString("id", data.uid.toString())
-       editor.putString("type", data.type)
-   }
+//   fun addSignUpInfo(data : SignUpResponse){
+//       val editor = preferences.edit()
+//       editor.putString("id", data.uid.toString())
+//       editor.putString("type", data.type)
+//   }
 
 
 

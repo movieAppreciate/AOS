@@ -1,14 +1,26 @@
 package com.proj.movieappreciate.ui
 
 
+import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
+
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.credentials.Credential
+import androidx.credentials.PasswordCredential
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
+import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+
 
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.Constants
@@ -25,13 +37,22 @@ import com.proj.movieappreciate.config.BaseActivity
 import com.proj.movieappreciate.databinding.ActivityLoginBinding
 import com.proj.movieappreciate.ui.viewModel.LoginActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ActivityContext
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 private  val TAG = "LoginActivity"
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::inflate) {
 
+    // 원 탭 로그인 클라이언트 구성
+    private lateinit var oneTapClient: SignInClient
+    private lateinit var signInRequest: BeginSignInRequest
 
-//    var mGoogleSignInClient: GoogleSignInClient? = null
+    private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
+    private var showOneTapUI = true
+
+    //    var mGoogleSignInClient: GoogleSignInClient? = null
     val loginActivityViewModel : LoginActivityViewModel by viewModels()
     val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
         if (error != null) {
@@ -53,18 +74,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         //requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
 //
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.google_app_key))
-//            .requestEmail()
-//            .build()
-//
-//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
-        /** Naver Login Module Initialize */
-        val naverClientId = getString(R.string.social_login_info_naver_client_id)
-        val naverClientSecret = getString(R.string.social_login_info_naver_client_secret)
-        val naverClientName = getString(R.string.social_login_info_naver_client_name)
-        NaverIdLoginSDK.initialize(this, naverClientId, naverClientSecret , naverClientName)
+//        /** Naver Login Module Initialize */
+//        val naverClientId = getString(R.string.social_login_info_naver_client_id)
+//        val naverClientSecret = getString(R.string.social_login_info_naver_client_secret)
+//        val naverClientName = getString(R.string.social_login_info_naver_client_name)
+//        NaverIdLoginSDK.initialize(this, naverClientId, naverClientSecret , naverClientName)
 
 
         init()
@@ -74,10 +88,55 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             val intent = Intent(this,AnnouncementActivity::class.java)
             startActivity(intent)
         }
+
+
     }
 
 
-
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        when (requestCode) {
+//            REQ_ONE_TAP -> {
+//                try {
+//                    val credential = oneTapClient.getSignInCredentialFromIntent(data)
+//                    val idToken = credential.googleIdToken
+//                    val username = credential.id
+//                    val password = credential.password
+//
+//                    when {
+//                        idToken != null -> {
+//                            // Handle successful sign-in
+//                            Log.d("구글", "Got ID token: $idToken")
+//                            // You can now use this ID token for authentication or other purposes
+//                            Log.d("구글","id : $username")
+//                            //todo : 로그인 api로 uid값 전송
+//                            loginActivityViewModel.signUp(uid = credential.id, type = "google","")
+//                            loginActivityViewModel.login(uid = credential.id, type = "google","")
+//                            Log.d("로그인 onresult",loginActivityViewModel.signUpResponse.toString())
+//
+//                        }
+//                        password != null -> {
+//                            Log.d("구글","Got password")
+//                        }
+//                        else -> {
+//                            Log.d("구글","no id token or password")
+//                        }
+//                    }
+//
+//                } catch (e: ApiException) {
+//                    when (e.statusCode) {
+//                        CommonStatusCodes.CANCELED-> {
+//                            Log.d("구글","dialog was closed")
+//                            showOneTapUI = false
+//                        }
+//                    }
+//
+//                    // Handle API exceptions
+//                    Log.e("Google", e.toString())
+//                }
+//            }
+//        }
+//    }
 
 
 
@@ -86,13 +145,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             kakaoLogin()
         }
 
-//        googleLoginBtn.setOnClickListener {
-//            googleLogin()
-//
-//        }
+        googleLoginBtn.setOnClickListener{
+            lifecycleScope.launch{
+                googleLogin()
+            }
+        }
 
         naverLoginBtn.setOnClickListener {
-            naverLogin()
+//            naverLogin()
         }
         loginActivityViewModel.signUpResponse.observe(this@LoginActivity) {
             val data = it.getOrNull()
@@ -106,6 +166,70 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             if (data != null){
                 Toast.makeText(this@LoginActivity, "로그인 완료", Toast.LENGTH_LONG).show()
                 Log.d(TAG, "init: 로그인 ${it}")
+            }
+        }
+    }
+
+    suspend  fun googleLogin() {
+            requestGoogleLogin(this@LoginActivity)
+    }
+
+
+    suspend fun requestGoogleLogin(
+        activityContext: Context
+    ) {
+
+        val credentialManager = CredentialManager.create(this)
+
+        val googleIdOption:GetGoogleIdOption = GetGoogleIdOption.Builder()
+            .setFilterByAuthorizedAccounts(false)
+            .setServerClientId(getString(R.string.google_server_client_ID))
+            .build()
+
+        val request : GetCredentialRequest = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+       kotlin.runCatching {
+           credentialManager.getCredential(
+               request = request,
+               context =  activityContext
+           )
+       }
+           .onSuccess {
+               val credential = it.credential
+               Log.d("구글",credential.toString())
+               handleGoogleCredential(credential)
+           }
+           .onFailure {
+               Log.d("구글", it.toString())
+
+           }
+
+    }
+
+    private fun handleGoogleCredential(credential: Credential) {
+        when (credential) {
+            is GoogleIdTokenCredential -> {
+                try {
+                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                    // GoogleIdTokenCredential으로 할 수 있는 추가 작업 수행
+                    googleIdTokenCredential.id
+                    googleIdTokenCredential.data
+                    loginActivityViewModel.login(uid = googleIdTokenCredential.id, type = "google", profileURL = "")
+
+                } catch (e: GoogleIdTokenParsingException) {
+                    Log.e("구글", e.toString())
+                }
+            }
+            is PasswordCredential -> {
+                // PasswordCredential에 대한 처리 로직 추가 (필요에 따라)
+                val username = credential.id
+                val password = credential.password
+                loginActivityViewModel.login(uid = credential.id, type = "google", profileURL = "")
+            }
+            else -> {
+                Log.e("구글", "Unexpected type of credential")
             }
         }
     }
@@ -132,6 +256,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
         }
     }
+
 
     private fun getKakaoUserInfo() {
         UserApiClient.instance.me { user, error ->
@@ -170,42 +295,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
     }
 
 
-//    private fun googleLogin() {
-//        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//            .requestIdToken(getString(R.string.default_web_client_id))
-//            .requestEmail()
-//            .build()
-//        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-//        val signInIntent = mGoogleSignInClient.signInIntent
-//        startActivityForResult(signInIntent, 1001)
-//    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1001) {
-//            try {
-////                val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-////                handleSignInResult(task)
-//            } catch (e) {
-//                // 로그인 실패
-//                Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-//
-//            }
-        }
-    }
-
-//    private fun handleSignInResult(completedTask: Task) {
-//        try {
-//            val account = completedTask.getResult(ApiException::class.java)
-//            // 로그인 성공: account.getEmail(), account.getIdToken() 등을 활용할 수 있습니다.
-//            Log.d(TAG, "handleSignInResult: ${account.email}")
-//            loginActivityViewModel.login(account.id.toString(), "google", account.photoUrl.toString() )
-//        } catch (e: ApiException) {
-//            // 로그인 실패
-//            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
-//
-//        }
-//    }
 
     private fun naverLogin() {
         var naverToken :String? = ""
@@ -262,4 +351,10 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
 
 
-}
+
+
+
+    }
+
+
+
