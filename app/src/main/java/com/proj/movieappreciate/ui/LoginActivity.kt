@@ -163,6 +163,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         }
         loginActivityViewModel.loginResponse.observe(this@LoginActivity) {
             val data = it.getOrNull()
+            Log.d("로그인",data.toString())
             if (data != null){
                 Toast.makeText(this@LoginActivity, "로그인 완료", Toast.LENGTH_LONG).show()
                 Log.d(TAG, "init: 로그인 ${it}")
@@ -213,9 +214,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             is GoogleIdTokenCredential -> {
                 try {
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                    // GoogleIdTokenCredential으로 할 수 있는 추가 작업 수행
-                    googleIdTokenCredential.id
-                    googleIdTokenCredential.data
+
                     loginActivityViewModel.login(uid = googleIdTokenCredential.id, type = "google", profileURL = "")
 
                 } catch (e: GoogleIdTokenParsingException) {

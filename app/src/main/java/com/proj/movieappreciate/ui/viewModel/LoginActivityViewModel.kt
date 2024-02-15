@@ -1,5 +1,6 @@
 package com.proj.movieappreciate.ui.viewModel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +11,7 @@ import com.proj.movieappreciate.data.dataSource.model.LoginResponse
 import com.proj.movieappreciate.data.dataSource.model.SignUpData
 import com.proj.movieappreciate.data.dataSource.model.SignUpResponse
 import com.proj.movieappreciate.data.repository.AuthRepository
+import com.proj.movieappreciate.ui.login.data.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,8 +41,6 @@ class LoginActivityViewModel @Inject constructor(private val authRepository : Au
             val data = UserDTO(uid, type)
             try{
                 val result = authRepository.login(uid, type)
-                Log.d("로그인 login viewModel", result.isSuccess.toString())
-                Log.e("로그인 viewModel", "login: ${result}" )
                 if(result.isFailure){
                     if(result.exceptionOrNull() is AuthRepository.SignUpException){
                         signUp(uid, type, profileURL)
@@ -48,7 +48,7 @@ class LoginActivityViewModel @Inject constructor(private val authRepository : Au
                 }
                 else{
                     _loginResponse.value = result
-                    Log.d("로그인 login 뷰 모댈 result", "login: $result")
+                    Log.d("로그인 login 뷰 모댈 result", "login: ${_loginResponse.value}")
                 }
 
             } catch (e : Exception){
