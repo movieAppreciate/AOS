@@ -1,6 +1,6 @@
-package com.proj.movieappreciate.ui.data
+package com.proj.movieappreciate.ui.login.data
 
-import com.proj.movieappreciate.ui.data.model.LoggedInUser
+import com.proj.movieappreciate.ui.login.data.model.LoggedInUser
 
 /**
  * Class that requests authentication and user information from the remote data source and

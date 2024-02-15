@@ -2,6 +2,8 @@ package com.proj.movieappreciate.config
 
 import android.app.Application
 import android.content.Context
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kakao.sdk.common.KakaoSdk
@@ -35,6 +37,14 @@ class App : Application() {
     private var appContext: Context? = null
     lateinit var sharedPreferences: SharedPreferencesUtil
     companion object {
+
+        // 인스턴스화할 preferences datastore의 이름
+        val USER_PREFERENCES_NAME = "user_preferences"
+        val Context.datastore by  preferencesDataStore(
+            name = USER_PREFERENCES_NAME
+        )
+
+        val ACCESS_TOKEN_KEY = stringPreferencesKey("user_access_token")
 
 
         const val SHARED_PREFERENCES_NAME = "SHARED_PREFERENCE"
