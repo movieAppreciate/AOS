@@ -5,23 +5,33 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import com.proj.movieappreciate.R
+import com.proj.movieappreciate.data.repository.AnnounceRepository
 import com.proj.movieappreciate.databinding.FragmentAnnouncementBinding
 import com.proj.movieappreciate.ui.LoginActivity
+import com.proj.movieappreciate.ui.viewModel.AnnouncementViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
+
 
 class AnnouncementFragment : Fragment() {
+
+
+    private val announcementViewModel : AnnouncementViewModel by viewModels()
 
     private var _binding:FragmentAnnouncementBinding? = null
     private val binding get() = _binding!!
     private var listAnnouncement = ArrayList<Announcement>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentAnnouncementBinding.inflate(layoutInflater,container,false)
@@ -30,6 +40,8 @@ class AnnouncementFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //todo : 공지사항 등록 기능 화면
         binding.editBtn.setOnClickListener{
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()

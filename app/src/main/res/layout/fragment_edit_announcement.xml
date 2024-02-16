@@ -26,13 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/announcBtn"
         android:layout_marginTop="20dp"
-        android:text="유형을 선택해주세요"/>
+        android:textStyle="bold"
+        android:text="공지사항 유형 선택"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/typeTv"
+        android:hint="유형을 선택해주세요"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
 
         <AutoCompleteTextView
@@ -40,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="공지" />
+            android:text="" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -48,17 +50,20 @@
         android:id="@+id/titleTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="제목을 작성하세요"
+        android:text="공지사항 제목 작성"
+        android:textStyle="bold"
         android:layout_marginTop="20dp"
         android:layout_below="@id/textInputLayout"/>
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/titleEt"
+        android:id="@+id/titleEditText"
         android:layout_width="match_parent"
         android:layout_below="@id/titleTextView"
         android:background="@color/gray"
-        android:textSize="25sp"
         android:text=""
+        android:padding="5dp"
+
+        android:hint="제목을 작성해주세요"
         android:layout_height="wrap_content"/>
 
 
@@ -66,16 +71,18 @@
         android:id="@+id/descTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="제목을 작성하세요"
+        android:text="공지사항 내용 작성"
+        android:textStyle="bold"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/titleEt"/>
+        android:layout_below="@id/titleEditText"/>
 
     <com.google.android.material.textfield.TextInputEditText
         android:layout_width="match_parent"
         android:layout_below="@id/descTv"
         android:background="@color/gray"
-        android:id="@+id/descEt"
+        android:id="@+id/contentEditText"
         android:text=""
+        android:hint="내용을 작성해주세요"
         android:layout_height="200dp">
 
     </com.google.android.material.textfield.TextInputEditText>
@@ -84,7 +91,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/doneBtn"
-        android:layout_below="@id/descEt"
+        android:layout_below="@id/contentEditText"
         android:layout_marginTop="10dp"
         android:text="완료하기"
         android:backgroundTint="@color/black"/>

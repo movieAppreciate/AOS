@@ -1,8 +1,10 @@
 package com.proj.movieappreciate.util
 
 import android.content.Context
+import com.proj.movieappreciate.data.dataSource.remote.AnnouncementDataSource
 import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSource
 import com.proj.movieappreciate.data.dataSource.remote.ReportRemoteDataSource
+import com.proj.movieappreciate.data.repository.AnnounceRepository
 import com.proj.movieappreciate.data.repository.AuthRepository
 import com.proj.movieappreciate.data.repository.ReportRepository
 import com.proj.movieappreciate.ui.login.data.UserPreferencesRepository
@@ -26,6 +28,12 @@ object RepositoryModule {
     @Singleton
     fun provideReportRepository(remoteDataSource: ReportRemoteDataSource): ReportRepository {
         return ReportRepository(remoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnnounceRepository(remoteDataSource : AnnouncementDataSource) :AnnounceRepository {
+        return AnnounceRepository(remoteDataSource)
     }
 
 }

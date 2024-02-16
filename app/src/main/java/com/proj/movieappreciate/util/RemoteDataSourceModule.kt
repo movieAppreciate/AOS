@@ -1,5 +1,7 @@
 package com.proj.movieappreciate.util
 
+import com.proj.movieappreciate.data.dataSource.remote.AnnouncementDataSource
+import com.proj.movieappreciate.data.dataSource.remote.AnnouncementDataSourceImpl
 import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSource
 import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSourceImpl
 import com.proj.movieappreciate.data.dataSource.remote.RemoteDataSourceImpl
@@ -34,5 +36,11 @@ object RemoteDataSourceModule {
     @Singleton
     fun provideReportRemoteDataSource(): ReportRemoteDataSource {
         return ReportRemoteDataSourceImpl(RetrofitUtil.reportService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnnouncementDataSource() : AnnouncementDataSource {
+        return AnnouncementDataSourceImpl(RetrofitUtil.announcementService)
     }
 }
