@@ -12,6 +12,8 @@ import com.proj.movieappreciate.data.dataSource.remote.RemoteDataSourceImpl
 import com.proj.movieappreciate.data.dataSource.remote.retrofit.AuthService
 import com.proj.movieappreciate.data.dataSource.remote.retrofit.RemoteDataSource
 import com.proj.movieappreciate.data.repository.AuthRepository
+import com.proj.movieappreciate.data.token.AuthInterceptor
+import com.proj.movieappreciate.data.token.JwtTokenManager
 import com.proj.movieappreciate.util.RetrofitUtil
 import com.proj.movieappreciate.util.SharedPreferencesUtil
 import dagger.Module
@@ -28,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @HiltAndroidApp
@@ -36,15 +39,23 @@ class App : Application() {
     val API_URL = "http://ec2-54-180-121-146.ap-northeast-2.compute.amazonaws.com:8080/"
     private var appContext: Context? = null
     lateinit var sharedPreferences: SharedPreferencesUtil
+
+    @Inject
+    lateinit var tokenManager: JwtTokenManager
+
+
+
     companion object {
 
-        // 인스턴스화할 preferences datastore의 이름
-        val USER_PREFERENCES_NAME = "user_preferences"
-        val Context.datastore by  preferencesDataStore(
-            name = USER_PREFERENCES_NAME
-        )
+        // jwt token intercept를 위한 상수
+        const val HEADER_AUTHORIZATION = "Authorization"
+        const val TYPE = "Bearer"
 
+        // preferences datastore
+        val USER_PREFERENCES_NAME = "user_preferences"
+        val Context.datastore by  preferencesDataStore(name = USER_PREFERENCES_NAME)
         val ACCESS_TOKEN_KEY = stringPreferencesKey("user_access_token")
+        val REFRESH_TOKEN_KEY = stringPreferencesKey("user_refresh_token")
 
 
         const val SHARED_PREFERENCES_NAME = "SHARED_PREFERENCE"
@@ -60,13 +71,17 @@ class App : Application() {
         initRetrofitInstance()
         sharedPreferences = SharedPreferencesUtil(applicationContext)
 
+
     }
 
+    //todo : 레트로핏, okhttpClient 생성 코드 위치 이동 필요!
     private fun initRetrofitInstance() {
+
         val client: OkHttpClient = OkHttpClient.Builder()
             .readTimeout(5000, TimeUnit.MILLISECONDS)
             .connectTimeout(5000, TimeUnit.MILLISECONDS)
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .addInterceptor(AuthInterceptor(tokenManager))
             .build()
 
         // retrofit 이라는 전역변수에 API url, 인터셉터, Gson을 넣어주고 빌드해주는 코드

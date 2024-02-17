@@ -11,7 +11,6 @@ import com.proj.movieappreciate.data.dataSource.model.LoginResponse
 import com.proj.movieappreciate.data.dataSource.model.SignUpData
 import com.proj.movieappreciate.data.dataSource.model.SignUpResponse
 import com.proj.movieappreciate.data.repository.AuthRepository
-import com.proj.movieappreciate.ui.login.data.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

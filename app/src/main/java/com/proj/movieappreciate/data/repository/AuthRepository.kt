@@ -1,19 +1,16 @@
 package com.proj.movieappreciate.data.repository
 
-import android.content.Context
 import android.util.Log
 import com.proj.movieappreciate.data.dataSource.model.LoginResponse
 import com.proj.movieappreciate.data.dataSource.model.SignUpResponse
 import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSource
-import com.proj.movieappreciate.ui.login.data.UserPreferencesRepository
-import dagger.hilt.android.qualifiers.ApplicationContext
-import okhttp3.internal.userAgent
+import com.proj.movieappreciate.data.token.JwtTokenManager
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
 class AuthRepository @Inject constructor(
     private val remoteDataSource: AuthRemoteDataSource,
-    val userPreferencesRepository: UserPreferencesRepository
+    val tokenManager: JwtTokenManager
 ) {
 
     class SignUpException : Exception("SignUp")
@@ -37,8 +34,8 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful) {
                 //todo : datastore에 access token 저장해주기
                 Log.d("로그인 액세스 토큰", response.body()?.accessToken.toString())
-                userPreferencesRepository.saveUserAccessToken(response.body()?.accessToken.toString())
-                Log.d("로그인 데이터스토어", userPreferencesRepository.getAccessToken().toString())
+                tokenManager.saveUserAccessToken(response.body()?.accessToken.toString())
+                Log.d("로그인 데이터스토어", tokenManager.getAccessToken().first().toString())
 
                 Result.success(response.body()!!)
             } else {

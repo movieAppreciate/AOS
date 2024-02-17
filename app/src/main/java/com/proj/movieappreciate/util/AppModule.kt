@@ -1,7 +1,7 @@
 package com.proj.movieappreciate.util
 
 import android.content.Context
-import com.proj.movieappreciate.ui.login.data.UserPreferencesRepository
+import com.proj.movieappreciate.data.token.JwtTokenManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,8 +15,8 @@ object TokenModule {
 
     @Singleton
     @Provides
-    fun providesUserPreferencesRepository(@ApplicationContext context : Context) : UserPreferencesRepository {
-        return UserPreferencesRepository(context)
+    fun providesUserPreferencesRepository(@ApplicationContext context : Context) : JwtTokenManager {
+        return JwtTokenManager(context)
     }
 
 

@@ -15,11 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieAppreciate"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.GoogleLoginActivity"
-            android:exported="false" >
-
-        </activity>
 
         <activity
             android:name=".ui.announcement.AnnouncementActivity"
