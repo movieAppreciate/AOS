@@ -1,14 +1,18 @@
 package com.proj.movieappreciate.data.repository
 
 import android.util.Log
-import com.proj.movieappreciate.data.dataSource.model.UserDTO
 import com.proj.movieappreciate.data.dataSource.model.LoginResponse
 import com.proj.movieappreciate.data.dataSource.model.SignUpResponse
 import com.proj.movieappreciate.data.dataSource.remote.AuthRemoteDataSource
-import com.proj.movieappreciate.data.dataSource.remote.retrofit.RemoteDataSource
+import com.proj.movieappreciate.data.token.JwtTokenManager
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemoteDataSource) {
+class AuthRepository @Inject constructor(
+    private val remoteDataSource: AuthRemoteDataSource,
+    val tokenManager: JwtTokenManager
+) {
+
     class SignUpException : Exception("SignUp")
     suspend fun signUp(uid : String, type : String, profileURL : String): Result<SignUpResponse> {
         return try {
@@ -28,7 +32,11 @@ class AuthRepository @Inject constructor(private val remoteDataSource: AuthRemot
         return try {
             val response = remoteDataSource.login(uid, type)
             if (response.isSuccessful) {
-                Log.d("로그인 성공", response.headers().toString())
+                //todo : datastore에 access token 저장해주기
+                Log.d("로그인 액세스 토큰", response.body()?.accessToken.toString())
+                tokenManager.saveUserAccessToken(response.body()?.accessToken.toString())
+                Log.d("로그인 데이터스토어", tokenManager.getAccessToken().first().toString())
+
                 Result.success(response.body()!!)
             } else {
                 if(response.code() == 401){

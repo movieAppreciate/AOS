@@ -7,7 +7,9 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.proj.movieappreciate.R
 import com.proj.movieappreciate.databinding.ActivityAnnouncementBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AnnouncementActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityAnnouncementBinding

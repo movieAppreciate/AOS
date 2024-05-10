@@ -103,7 +103,8 @@ dependencies {
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
 
 
-
+    // token을 저장할 preferences datastore
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
 
 
